@@ -142,7 +142,10 @@ class _ThirdPartCloudPageState extends State<ThirdPartCloudPage> {
                 itemBuilder: (context, index) {
                   final url = _history[index];
                   return Container(
-                    color: Colors.white,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                     padding: const EdgeInsets.all(12),
                     child: Row(
                       children: [
