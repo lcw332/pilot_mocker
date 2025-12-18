@@ -8,8 +8,8 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      child: Container(
+    return Scaffold(
+      body: Container(
         color: const Color.fromARGB(255, 233, 233, 233),
         child: Row(
           children: [
@@ -23,13 +23,21 @@ class HomePage extends StatelessWidget {
                       children: [
                         IconButton(
                           icon: const Icon(Icons.person),
-                          style: ButtonStyle(iconSize: WidgetStateProperty.all(24)),
+                          style: ButtonStyle(
+                            iconSize: WidgetStateProperty.all(24),
+                          ),
                           onPressed: () {
                             // Navigate to settings page
                           },
                         ),
                         const SizedBox(width: 8),
-                        IconButton(icon: const Icon(Icons.shield), style: ButtonStyle(iconSize: WidgetStateProperty.all(24)), onPressed: () {}),
+                        IconButton(
+                          icon: const Icon(Icons.shield),
+                          style: ButtonStyle(
+                            iconSize: WidgetStateProperty.all(24),
+                          ),
+                          onPressed: () {},
+                        ),
                       ],
                     ),
                     const SizedBox(height: 20),
@@ -45,11 +53,24 @@ class HomePage extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Column(
-                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text('限高500m', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                                    Text('utmiss', style: TextStyle(fontSize: 14, color: Colors.grey[600])),
+                                    Text(
+                                      '限高500m',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Text(
+                                      'utmiss',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.grey[600],
+                                      ),
+                                    ),
                                   ],
                                 ),
                                 const Icon(Icons.location_on),
@@ -70,16 +91,35 @@ class HomePage extends StatelessWidget {
                               height: 88,
                               color: Colors.white,
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Consumer<ThirdCloudModel>(
                                     builder:
                                         (context, thirdCloud, child) => Column(
-                                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
-                                            Text(thirdCloud.platformName == '' ? '欢迎使用' : thirdCloud.platformName, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                                            Text(thirdCloud.workspaceName == '' ? '请登录以继续' : thirdCloud.workspaceName, style: TextStyle(fontSize: 14, color: Colors.grey[600])),
+                                            Text(
+                                              thirdCloud.platformName == ''
+                                                  ? '欢迎使用'
+                                                  : thirdCloud.platformName,
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            Text(
+                                              thirdCloud.workspaceName == ''
+                                                  ? '请登录以继续'
+                                                  : thirdCloud.workspaceName,
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                color: Colors.grey[600],
+                                              ),
+                                            ),
                                           ],
                                         ),
                                   ),
@@ -104,7 +144,16 @@ class HomePage extends StatelessWidget {
                             color: Colors.white,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [Text('航线', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)), const Icon(Icons.edit_road)],
+                              children: [
+                                Text(
+                                  '航线',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const Icon(Icons.edit_road),
+                              ],
                             ),
                           ),
                         ),
@@ -117,7 +166,16 @@ class HomePage extends StatelessWidget {
                             color: Colors.white,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [Text('相册', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)), const Icon(Icons.photo_library)],
+                              children: [
+                                Text(
+                                  '相册',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const Icon(Icons.photo_library),
+                              ],
                             ),
                           ),
                         ),
@@ -133,7 +191,11 @@ class HomePage extends StatelessWidget {
                           child: Text(
                             'Welcome to Pilot 2 Mocker',
                             // 白色
-                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black54),
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black54,
+                            ),
                           ),
                         ),
                       ),
@@ -148,7 +210,21 @@ class HomePage extends StatelessWidget {
                 padding: const EdgeInsets.all(16),
                 color: Colors.white,
                 child: Column(
-                  children: [Text('请选择飞行器', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)), const SizedBox(height: 20), Expanded(child: AircraftSelection())],
+                  children: [
+                    Text(
+                      '请选择飞行器',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: AircraftSelection(),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),

@@ -54,91 +54,77 @@ class _WebViewPageState extends State<WebViewPage> {
     final ws = Provider.of<WsModel>(context, listen: false);
     final api = Provider.of<ApiModel>(context, listen: false);
 
-    return Material(
-      child: Container(
-        color: const Color.fromARGB(255, 233, 233, 233),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              height: 60,
-              color: Colors.white,
-              alignment: Alignment.center,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  IconButton(icon: const Icon(Icons.arrow_back), style: ButtonStyle(iconSize: WidgetStateProperty.all(24)), onPressed: () async {
-                    final r = await webViewController?.evaluateJavascript(source: "window.djiBridge.onBackClick();");
-                    if (r == false ) {
-                      Navigator.of(context).pop();
-                    }
-                  }),
-                  Text(_title, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black)),
-                  Row(
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.autorenew),
-                        style: ButtonStyle(iconSize: WidgetStateProperty.all(24)),
-                        onPressed: () {
-                          webViewController?.reload();
-                        },
-                      ),
-                      const SizedBox(width: 8),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(_title),
+        backgroundColor: Colors.white,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () async {
+            final r = await webViewController?.evaluateJavascript(source: "window.djiBridge.onBackClick();");
+            if (r == false) {
+              Navigator.of(context).pop();
+            }
+          },
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.autorenew),
+            onPressed: () {
+              webViewController?.reload();
+            },
+          ),
+          TextButton(
+            onPressed: () {
+              // 弹出对话框确认注销
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text('确认注销'),
+                    content: const Text('注销后您的数据将不再同步至云端。是否注销？'),
+                    actions: [
                       TextButton(
                         onPressed: () {
-                          // 弹出对话框确认注销
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: const Text('确认注销'),
-                                content: const Text('注销后您的数据将不再同步至云端。是否注销？'),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: const Text('取消'),
-                                  ),
-                                  TextButton(
-                                    onPressed: () async {
-                                      // 清除所有模型数据
-                                      thirdCloud.clear();
-                                      thing.clear();
-                                      ws.clear();
-                                      api.clear();
-                                      // 清除webview中的localStorage数据
-                                      await webViewController?.evaluateJavascript(source: "window.djiBridge.onStopPlatform();");
-                                      // 关闭确认对话框
-                                      Navigator.of(context).pop();
-                                      // 返回上一个界面
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: const Text('确认', style: TextStyle(fontWeight: FontWeight.bold)),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
+                          Navigator.of(context).pop();
                         },
-                        style: ButtonStyle(
-                          shape: WidgetStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0))),
-                          backgroundColor: WidgetStateProperty.all(Colors.black),
-                          foregroundColor: WidgetStateProperty.all(Colors.white),
-                        ),
-                        child: const Text('注销'),
+                        child: const Text('取消'),
+                      ),
+                      TextButton(
+                        onPressed: () async {
+                          // 清除所有模型数据
+                          thirdCloud.clear();
+                          thing.clear();
+                          ws.clear();
+                          api.clear();
+                          // 清除webview中的localStorage数据
+                          await webViewController?.evaluateJavascript(source: "window.djiBridge.onStopPlatform();");
+                          // 关闭确认对话框
+                          Navigator.of(context).pop();
+                          // 返回上一个界面
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text('确认', style: TextStyle(fontWeight: FontWeight.bold)),
                       ),
                     ],
-                  ),
-                ],
-              ),
+                  );
+                },
+              );
+            },
+            style: ButtonStyle(
+              shape: WidgetStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0))),
+              backgroundColor: WidgetStateProperty.all(Colors.black),
+              foregroundColor: WidgetStateProperty.all(Colors.white),
             ),
-            SizedBox(height: 1),
-            Expanded(
-              child: injectJsSource.isEmpty
-                  ? const Center(child: CircularProgressIndicator())
-                  : InAppWebView(
+            child: const Text('注销'),
+          ),
+        ],
+      ),
+      body: Container(
+        color: const Color.fromARGB(255, 233, 233, 233),
+        child: injectJsSource.isEmpty
+            ? const Center(child: CircularProgressIndicator())
+            : InAppWebView(
                 initialUrlRequest: URLRequest(url: WebUri(widget.url)),
                 initialSettings: settings,
                 initialUserScripts: UnmodifiableListView([
@@ -197,14 +183,13 @@ class _WebViewPageState extends State<WebViewPage> {
                               window.djiBridge._loadedComponents.add('thing');
                             """);
 
-
                             break;
                           case 'api':
                             // 处理 api 组件加载
                             Map<String, dynamic> paramMap = param != null ? json.decode(param) : {};
                             // 更新 ApiModel
                             Provider.of<ApiModel>(context, listen: false).setAll(paramMap['host'] ?? '', paramMap['token'] ?? '');
-                            
+
                             await controller.evaluateJavascript(source: """
                               window.djiBridge._loadedComponents.add('api');
                               window.djiBridge._apiHost = '${paramMap['host']}';
@@ -391,9 +376,6 @@ class _WebViewPageState extends State<WebViewPage> {
                   print('Console message: ${consoleMessage.message}');
                 },
               ),
-            ),
-          ],
-        ),
       ),
     );
   }
