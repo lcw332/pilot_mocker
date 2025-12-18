@@ -36,6 +36,34 @@ class _ThirdPartCloudPageState extends State<ThirdPartCloudPage> {
     await prefs.setStringList('third_party_history', _history);
   }
 
+  Future<void> _navigateToWebView(String url) async {
+    if (context.mounted) {
+      final shouldNavigate = await showDialog<bool>(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('提示'),
+            content: const Text('正在前往第三方网站，是否继续？'),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('取消'),
+                onPressed: () => Navigator.of(context).pop(false),
+              ),
+              TextButton(
+                child: const Text('确定'),
+                onPressed: () => Navigator.of(context).pop(true),
+              ),
+            ],
+          );
+        },
+      );
+
+      if (shouldNavigate == true && context.mounted) {
+        Navigator.of(context).pushNamed('/web_view', arguments: {'url': url});
+      }
+    }
+  }
+
   @override
   void dispose() {
     _controller.dispose();
@@ -64,9 +92,7 @@ class _ThirdPartCloudPageState extends State<ThirdPartCloudPage> {
                 });
                 _saveHistory();
               }
-              Navigator.of(
-                context,
-              ).pushNamed('/web_view', arguments: {'url': _url});
+              _navigateToWebView(_url);
             },
             style: ButtonStyle(
               shape: WidgetStateProperty.all<RoundedRectangleBorder>(
@@ -156,6 +182,7 @@ class _ThirdPartCloudPageState extends State<ThirdPartCloudPage> {
                                 _url = url;
                                 _controller.text = _url;
                               });
+                              _navigateToWebView(_url);
                             },
                             child: Text(
                               url,
